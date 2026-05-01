@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hanseob Kim | Profile</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --text-color: #1f2937;
+            --bg-color: #f8fafc;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+
+        h1 { margin: 0; color: var(--primary-color); font-size: 2.2rem; }
+        h2 { border-bottom: 2px solid var(--primary-color); padding-bottom: 0.5rem; color: #334155; }
+        
+        .role { font-size: 1.2rem; color: #64748b; margin-top: 0.5rem; }
+        
+        ul { list-style: none; padding: 0; }
+        li { margin-bottom: 0.8rem; padding-left: 1.2rem; position: relative; }
+        li::before {
+            content: "•";
+            color: var(--primary-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .contact-links a {
+            display: inline-block;
+            margin-right: 15px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-links a:hover { text-decoration: underline; }
+
+        footer { text-align: center; padding: 3rem 0; color: #94a3b8; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Hanseob Kim</h1>
+    <p class="role">Professor & Researcher in XR Technology</p>
+</header>
+
+<div class="container">
+    <section class="profile-card">
+        <h2>About Me</h2>
+        <p>
+            인간과 컴퓨터의 상호작용(HCI)을 연구하며, 특히 가상현실(VR) 및 증강현실(AR) 환경에서의 
+            사용자 경험 개선과 사이버멀미 저감 기술에 집중하고 있습니다. 
+            국방 및 의료 등 다양한 도메인을 위한 몰입형 기술을 탐구합니다.
+        </p>
+    </section>
+
+    <section class="profile-card">
+        <h2>Research Interests</h2>
+        <ul>
+            <li><strong>XR for National Defense:</strong> 국방 훈련을 위한 초실감형 인터페이스 연구</li>
+            <li><strong>Cybersickness Mitigation:</strong> 시각적/심리적 요인 분석을 통한 멀미 저감 솔루션</li>
+            <li><strong>Digital Therapeutics:</strong> 환자 및 교통약자를 위한 VR 기반 치료/편의 기술</li>
+            <li><strong>Human-Computer Interaction:</strong> 시선 추적 및 햅틱 피드백 활용 인터렉션</li>
+        </ul>
+    </section>
+
+    <section class="profile-card">
+        <h2>Contact</h2>
+        <div class="contact-links">
+            <a href="mailto:example@korea.ac.kr">Email</a>
+            <a href="https://github.com">GitHub</a>
+            <a href="#">Lab Website</a>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <p>&copy; 2026 Hanseob Kim. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
