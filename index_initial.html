@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hanseob Kim | Profile</title>
+    <!-- 폰트어썸 (아이콘) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #2563eb;
             --text-color: #1f2937;
             --bg-color: #f8fafc;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
         }
 
         body {
@@ -17,8 +21,25 @@
             color: var(--text-color);
             background-color: var(--bg-color);
             margin: 0;
-            padding: 0;
+            padding: 0;padding-top: 70px;
         }
+
+        /* Top Navigation */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 5%; z-index: 100;
+        }
+        .nav-logo { font-size: 1.2rem; font-weight: 700; color: var(--primary-color); text-decoration: none; }
+        .nav-links { list-style: none; display: flex; gap: 15px; margin: 0; padding: 0; }
+        .nav-links a {
+            text-decoration: none; color: var(--text-color); font-weight: 500;
+            padding: 8px 16px; border-radius: 20px; transition: var(--transition);
+        }
+        .nav-links a:hover, .nav-links a.active { background-color: var(--primary-color); color: var(--white); }
 
         header {
             background-color: white;
@@ -70,6 +91,17 @@
     </style>
 </head>
 <body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <a href="index.html" class="nav-logo"><i class="fa-solid fa-laptop-code"></i> My Portfolio</a>
+    <ul class="nav-links">
+        <li><a href="index.html"><i class="fa-solid fa-star"></i> 모던 버전 1</a></li>
+        <li><a href="index_2.html"><i class="fa-solid fa-layer-group"></i> 모던 버전 2</a></li>
+        <li><a href="index_lab.html"><i class="fa-solid fa-flask"></i> DXP Lab</a></li>
+        <li><a href="index_initial.html" class="active"><i class="fa-solid fa-clock-rotate-left"></i> 베이직 버전</a></li>
+    </ul>
+</nav>
 
 <header>
     <h1>Hanseob Kim</h1>
