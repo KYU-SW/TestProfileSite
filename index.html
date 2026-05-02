@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생 포트폴리오 | 모던 웹</title>
+    <!-- 폰트어썸 (아이콘) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 구글 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* 건양대학교 메인 그린 컬러 톤 */
+            --primary-color: #005a3c; 
+            --primary-light: #007a52;
+            --bg-color: #f8fafc;
+            --text-color: #1f2937;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            padding-top: 70px;
+        }
+
+        /* Top Navigation */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            list-style: none; display: flex; gap: 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 20px;
+        }
+
+        /* Profile Section */
+        .profile-header {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 4rem;
+        }
+
+        .profile-img {
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--primary-color);
+            box-shadow: 0 5px 15px rgba(0,90,60,0.2);
+        }
+
+        .profile-info h1 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info h2 {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .skills-container {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem;
+        }
+
+        .skill-tag {
+            background: #e2e8f0;
+            color: #475569;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Projects Section */
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .project-img {
+            width: 100%; height: 200px;
+            object-fit: cover;
+        }
+
+        .project-summary {
+            padding: 1.5rem;
+        }
+
+        .project-summary h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .project-summary p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Modal (Popup) Styles */
+        .modal-overlay {
+            display: none; /* 기본적으로 숨김 */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--white);
+            width: 90%; max-width: 600px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 1.5rem;
+            color: var(--white);
+            background: rgba(0,0,0,0.5);
+            border: none;
+            border-radius: 50%;
+            width: 35px; height: 35px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .modal-body { padding: 2rem; }
+        .modal-body h2 { color: var(--primary-color); margin-bottom: 1rem; }
+        .modal-tech { margin: 1rem 0; font-size: 0.9rem; color: var(--primary-light); font-weight: bold; }
+        
+        @media (max-width: 768px) {
+            .profile-header { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <a href="#" class="nav-logo"><i class="fa-solid fa-laptop-code"></i> My Portfolio</a>
+    <ul class="nav-links">
+        <li><a href="#" class="active"><i class="fa-solid fa-star"></i> 최신 포트폴리오 (Modern)</a></li>
+        <li><a href="index_initial.html"><i class="fa-solid fa-clock-rotate-left"></i> 샘플 예시</a></li>
+        <li><a href="index_lab.html"><i class="fa-solid fa-clock-rotate-left"></i> 샘플 예시</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <!-- Profile Section -->
+    <header class="profile-header">
+        <!-- 프로필 이미지 (무료 이미지 링크 사용) -->
+        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80" alt="프로필 사진" class="profile-img">
+        
+        <div class="profile-info">
+            <h1>김OO (Konyang Kim)</h1>
+            <h2>국방XR학과 학부생 | Web & XR Developer</h2>
+            <p>가상현실(VR) 콘텐츠와 사용자 친화적인 웹 인터페이스 개발에 관심이 많은 학생입니다. 문제 해결 과정을 즐기며, 새로운 기술을 배우는 것을 좋아합니다.</p>
+            
+            <div class="skills-container">
+                <span class="skill-tag">HTML/CSS</span>
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">Unity</span>
+                <span class="skill-tag">C#</span>
+                <span class="skill-tag">Python</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Projects Section -->
+    <h2 class="section-title">My Projects</h2>
+    <section class="project-grid">
+        
+        <!-- Project Card 1 -->
+        <div class="project-card" onclick="openModal('project1')">
+            <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=600&q=80" alt="VR Project" class="project-img">
+            <div class="project-summary">
+                <h3>VR 전술 훈련 시뮬레이터</h3>
+                <p>Unity를 활용하여 가상 환경에서 전술 훈련을 진행할 수 있는 프로토타입을 개발했습니다. (클릭하여 자세히 보기)</p>
+            </div>
+        </div>
+
+        <!-- Project Card 2 -->
+        <div class="project-card" onclick="openModal('project2')">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80" alt="Web Project" class="project-img">
+            <div class="project-summary">
+                <h3>인터랙티브 웹 포트폴리오</h3>
+                <p>HTML, CSS, JS를 활용하여 반응형 웹사이트를 직접 구축하고 애니메이션 효과를 적용했습니다.</p>
+            </div>
+        </div>
+
+        <!-- Project Card 3 -->
+        <div class="project-card" onclick="openModal('project3')">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Data Project" class="project-img">
+            <div class="project-summary">
+                <h3>시선 추적 데이터 시각화</h3>
+                <p>사용자의 시선 데이터를 파이썬으로 전처리하고 차트로 시각화하는 미니 프로젝트입니다.</p>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+<!-- Modal 1: VR Project -->
+<div class="modal-overlay" id="project1">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('project1')">&times;</button>
+        <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=800&q=80" alt="VR Project Detail" class="project-img" style="height: 250px;">
+        <div class="modal-body">
+            <h2>VR 전술 훈련 시뮬레이터</h2>
+            <p class="modal-tech">사용 기술: Unity, C#, Oculus SDK</p>
+            <p><strong>프로젝트 설명:</strong><br>
+            가상 현실 공간 내에서 훈련자가 무기를 조작하고 목표물과 상호작용할 수 있는 기초 시뮬레이터입니다. 컨트롤러의 햅틱 피드백을 연동하여 몰입감을 높이는 데 주력했습니다.</p>
+            <br>
+            <p><strong>나의 역할:</strong><br>
+            - 플레이어 이동 및 상호작용 스크립트 작성<br>
+            - 3D 에셋 배치 및 조명 최적화</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 2: Web Project -->
+<div class="modal-overlay" id="project2">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('project2')">&times;</button>
+        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80" alt="Web Detail" class="project-img" style="height: 250px;">
+        <div class="modal-body">
+            <h2>인터랙티브 웹 포트폴리오</h2>
+            <p class="modal-tech">사용 기술: HTML5, CSS3, Vanilla JS</p>
+            <p><strong>프로젝트 설명:</strong><br>
+            템플릿을 사용하지 않고 바닥부터 직접 디자인하고 코딩한 개인 포트폴리오 웹사이트입니다. 모바일 기기에서도 깔끔하게 보이도록 CSS Flexbox와 Grid를 적극 활용했습니다.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 3: Data Project -->
+<div class="modal-overlay" id="project3">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('project3')">&times;</button>
+        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Data Detail" class="project-img" style="height: 250px;">
+        <div class="modal-body">
+            <h2>시선 추적 데이터 시각화</h2>
+            <p class="modal-tech">사용 기술: Python, Pandas, Matplotlib</p>
+            <p><strong>프로젝트 설명:</strong><br>
+            실험에서 추출된 CSV 형태의 안구 움직임(Eye-tracking) 로그 데이터를 정제하고, 사용자가 어디를 주로 바라보았는지 Heatmap 형태로 시각화하는 파이썬 스크립트를 작성했습니다.</p>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Modal Functionality -->
+<script>
+    // 모달 열기 함수
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.add('active');
+        document.body.style.overflow = 'hidden'; // 모달 팝업 시 배경 스크롤 방지
+    }
+
+    // 모달 닫기 함수
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+        document.body.style.overflow = 'auto'; // 배경 스크롤 원상복구
+    }
+
+    // 모달 배경(검은 영역) 클릭 시 닫히도록 설정
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            event.target.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    }
+</script>
+
+</body>
+</html>
