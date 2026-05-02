@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생 포트폴리오 | 인터랙티브 웹</title>
+    <!-- 폰트어썸 (아이콘) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 구글 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* 건양대학교 메인 그린 컬러 톤 */
+            --primary-color: #005a3c; 
+            --primary-light: #007a52;
+            --bg-color: #f8fafc;
+            --text-color: #1f2937;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            padding-top: 70px;
+        }
+
+        /* Top Navigation */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            z-index: 100;
+        }
+
+        .nav-logo { font-size: 1.2rem; font-weight: 700; color: var(--primary-color); text-decoration: none; }
+        .nav-links { list-style: none; display: flex; gap: 15px; }
+        .nav-links a {
+            text-decoration: none; color: var(--text-color); font-weight: 500;
+            padding: 8px 16px; border-radius: 20px; transition: var(--transition);
+        }
+        .nav-links a:hover, .nav-links a.active { background-color: var(--primary-color); color: var(--white); }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 2rem 20px; }
+
+        .section-title {
+            text-align: center; font-size: 1.8rem; margin: 4rem 0 2rem; color: var(--primary-color);
+            position: relative;
+        }
+        .section-title::after {
+            content: ''; display: block; width: 50px; height: 3px;
+            background: var(--primary-color); margin: 10px auto 0;
+        }
+
+        /* 1. Profile Section */
+        .profile-header {
+            background: var(--white); border-radius: 20px; padding: 3rem 2rem;
+            display: flex; align-items: center; gap: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 2rem;
+        }
+        .profile-img {
+            width: 200px; height: 200px; border-radius: 50%; object-fit: cover;
+            border: 5px solid var(--primary-color); box-shadow: 0 5px 15px rgba(0,90,60,0.2);
+        }
+        .profile-info h1 { font-size: 2.2rem; color: var(--primary-color); margin-bottom: 0.5rem; }
+        .profile-info h2 { font-size: 1.1rem; color: var(--text-light); font-weight: 400; margin-bottom: 1rem; }
+        
+        .skills-container { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem; }
+        .skill-tag { background: #e2e8f0; color: #475569; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+
+        /* 2. Education & Activities (Timeline) */
+        .timeline {
+            background: var(--white); border-radius: 20px; padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .timeline-item { border-left: 3px solid var(--primary-light); padding-left: 20px; margin-bottom: 20px; position: relative; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -10px; top: 5px;
+            width: 17px; height: 17px; border-radius: 50%; background: var(--primary-color); border: 3px solid var(--white);
+        }
+        .timeline-date { font-size: 0.9rem; color: var(--primary-color); font-weight: bold; }
+        .timeline-content h3 { font-size: 1.1rem; margin: 5px 0; }
+        .timeline-content p { font-size: 0.95rem; color: var(--text-light); }
+
+        /* 3. Projects Section (Interactive Cards) */
+        .project-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .project-card {
+            background: var(--white); border-radius: 15px; overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer;
+            border: 2px solid transparent; transition: var(--transition);
+        }
+        .project-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .project-card.active { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,90,60,0.2); }
+        .project-card img { width: 100%; height: 150px; object-fit: cover; }
+        .project-summary { padding: 1rem; text-align: center; font-weight: bold; }
+
+        /* 동적 프로젝트 상세 뷰 (Dynamic Detail View) */
+        .project-detail-view {
+            background: var(--white); border-radius: 20px; padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; gap: 2rem;
+            align-items: flex-start; transition: opacity 0.3s ease;
+        }
+        .detail-img { width: 40%; border-radius: 10px; object-fit: cover; aspect-ratio: 16/9; }
+        .detail-content { width: 60%; }
+        .detail-content h2 { color: var(--primary-color); font-size: 1.8rem; margin-bottom: 10px; }
+        .detail-tech { color: var(--primary-light); font-weight: bold; margin-bottom: 15px; font-size: 0.95rem; }
+        .detail-desc { color: var(--text-color); margin-bottom: 15px; }
+        .detail-role { background: var(--bg-color); padding: 15px; border-radius: 10px; font-size: 0.95rem; }
+
+        /* 4. Awards & Contact */
+        .awards-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;
+        }
+        .award-item {
+            background: var(--white); padding: 1.5rem; border-radius: 10px;
+            display: flex; align-items: center; gap: 15px; border: 1px solid var(--border-color);
+        }
+        .award-item i { font-size: 2rem; color: #fbbf24; }
+        
+        footer {
+            text-align: center; padding: 3rem 0; margin-top: 3rem;
+            background: var(--white); border-top: 1px solid var(--border-color);
+        }
+        .contact-links { margin: 1.5rem 0; }
+        .contact-links a {
+            font-size: 1.5rem; color: var(--text-light); margin: 0 10px; transition: var(--transition);
+        }
+        .contact-links a:hover { color: var(--primary-color); }
+
+        @media (max-width: 768px) {
+            .profile-header, .project-detail-view { flex-direction: column; text-align: center; }
+            .detail-img, .detail-content { width: 100%; }
+            .timeline-item::before { display: none; }
+            .timeline-item { border-left: none; padding-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <a href="#" class="nav-logo"><i class="fa-solid fa-laptop-code"></i> My Portfolio</a>
+    <ul class="nav-links">
+        <li><a href="#" class="active"><i class="fa-solid fa-star"></i> 모던 버전</a></li>
+        <li><a href="index_initial.html"><i class="fa-solid fa-clock-rotate-left"></i> 베이직 버전</a></li>
+        <li><a href="index_2.html"><i class="fa-solid fa-clock-rotate-left"></i> 베이직 버전</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <!-- 1. Profile Section -->
+    <header class="profile-header">
+        <!-- 여성 개발자 느낌의 무료 프로필 이미지 -->
+        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=300&q=80" alt="프로필 사진" class="profile-img">
+        
+        <div class="profile-info">
+            <h1>김건양 (Konyang Kim)</h1>
+            <h2>국방XR학과 3학년 | XR & 프론트엔드 개발자 지망생</h2>
+            <p>사용자 중심의 가상현실(VR) 콘텐츠 기획과, 데이터를 시각화하는 웹 인터페이스 개발에 관심이 많습니다. 문제 해결 과정을 즐기며 팀원들과 소통하며 성장하는 것을 목표로 합니다.</p>
+            
+            <div class="skills-container">
+                <span class="skill-tag">HTML/CSS</span>
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">Unity</span>
+                <span class="skill-tag">C#</span>
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">Figma</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. Education & Activities Section -->
+    <h2 class="section-title">Experience & Activities</h2>
+    <div class="timeline">
+        <div class="timeline-item">
+            <span class="timeline-date">2023. 03 - 현재</span>
+            <div class="timeline-content">
+                <h3>건양대학교 국방XR학과 재학</h3>
+                <p>XR 콘텐츠 프로그래밍, 컴퓨터 그래픽스, 데이터 분석 등 전공 지식 습득</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <span class="timeline-date">2024. 03 - 2024. 12</span>
+            <div class="timeline-content">
+                <h3>전공 학술 동아리 'XR-Dev' 회장</h3>
+                <p>유니티 스터디 주최 및 교내 전시회를 위한 팀 프로젝트 리드</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <span class="timeline-date">2025. 07 - 2025. 08</span>
+            <div class="timeline-content">
+                <h3>DXP Lab 학부연구생 인턴</h3>
+                <p>사이버멀미 저감 관련 데이터 전처리 보조 및 실험 환경 구축 지원</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Projects Section -->
+    <h2 class="section-title">My Projects</h2>
+    
+    <!-- 카드를 클릭하면 JS를 통해 아래 상세 내용이 바뀝니다 -->
+    <div class="project-grid">
+        <div class="project-card active" onclick="changeProject('project1', this)">
+            <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=400&q=80" alt="VR Project">
+            <div class="project-summary">VR 전술 훈련 시뮬레이터</div>
+        </div>
+        <div class="project-card" onclick="changeProject('project2', this)">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=400&q=80" alt="Web Project">
+            <div class="project-summary">인터랙티브 웹 포트폴리오</div>
+        </div>
+        <div class="project-card" onclick="changeProject('project3', this)">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=80" alt="Data Project">
+            <div class="project-summary">시선 추적 데이터 시각화</div>
+        </div>
+        <div class="project-card" onclick="changeProject('project4', this)">
+            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80" alt="IoT Project">
+            <div class="project-summary">아두이노 스마트 홈 IoT</div>
+        </div>
+    </div>
+
+    <!-- 동적 상세 뷰 영역 -->
+    <div class="project-detail-view" id="detail-view">
+        <!-- 초기 화면에는 프로젝트 1의 내용이 들어있습니다. -->
+        <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=800&q=80" alt="Detail Image" class="detail-img" id="detail-img">
+        <div class="detail-content">
+            <h2 id="detail-title">VR 전술 훈련 시뮬레이터</h2>
+            <p class="detail-tech" id="detail-tech"><i class="fa-solid fa-code"></i> 사용 기술: Unity, C#, Oculus SDK</p>
+            <p class="detail-desc" id="detail-desc">가상 현실 공간 내에서 훈련자가 무기를 조작하고 목표물과 상호작용할 수 있는 프로토타입 시뮬레이터입니다. 컨트롤러의 햅틱 피드백을 연동하여 몰입감을 높였습니다.</p>
+            <div class="detail-role">
+                <strong><i class="fa-solid fa-user-check"></i> 나의 역할 및 성과</strong>
+                <p id="detail-role-text">- 플레이어 이동(Teleport/Smooth) 및 물리 기반 상호작용 스크립트 작성<br>- Raycast를 활용한 타겟 인식 및 점수 시스템 구현</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Awards & Certifications Section -->
+    <h2 class="section-title">Awards & Certifications</h2>
+    <div class="awards-grid">
+        <div class="award-item">
+            <i class="fa-solid fa-medal"></i>
+            <div>
+                <h3 style="font-size: 1.1rem;">2024 교내 소프트웨어 해커톤 '우수상'</h3>
+                <p style="font-size: 0.9rem; color: var(--text-light);">건양대학교 소프트웨어중심대학사업단 (2024.11)</p>
+            </div>
+        </div>
+        <div class="award-item">
+            <i class="fa-solid fa-certificate"></i>
+            <div>
+                <h3 style="font-size: 1.1rem;">정보처리기사 (필기 합격)</h3>
+                <p style="font-size: 0.9rem; color: var(--text-light);">한국산업인력공단 (2025.03)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <h2>Let's Connect</h2>
+    <div class="contact-links">
+        <a href="#"><i class="fa-brands fa-github"></i></a>
+        <a href="#"><i class="fa-solid fa-envelope"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+    </div>
+    <p style="color: var(--text-light); font-size: 0.9rem;">&copy; 2026 Konyang Kim. Designed & Handcoded by me.</p>
+</footer>
+
+<!-- JavaScript: 프로젝트 데이터 객체 및 변경 로직 -->
+<script>
+    // 프로젝트 데이터 저장 (JSON 형태 객체)
+    const projectData = {
+        project1: {
+            title: "VR 전술 훈련 시뮬레이터",
+            tech: "사용 기술: Unity, C#, Oculus SDK",
+            desc: "가상 현실 공간 내에서 훈련자가 무기를 조작하고 목표물과 상호작용할 수 있는 프로토타입 시뮬레이터입니다. 컨트롤러의 햅틱 피드백을 연동하여 몰입감을 높였습니다.",
+            role: "- 플레이어 이동(Teleport/Smooth) 및 물리 기반 상호작용 스크립트 작성<br>- Raycast를 활용한 타겟 인식 및 점수 시스템 구현",
+            img: "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=800&q=80"
+        },
+        project2: {
+            title: "인터랙티브 웹 포트폴리오",
+            tech: "사용 기술: HTML5, CSS3, Vanilla JavaScript",
+            desc: "템플릿을 사용하지 않고 바닥부터 직접 기획, 디자인, 코딩을 진행한 개인 포트폴리오 웹사이트입니다. 모바일과 데스크톱 모두에서 깨지지 않도록 반응형 웹으로 구축했습니다.",
+            role: "- CSS Grid와 Flexbox를 활용한 모던 레이아웃 설계<br>- JavaScript를 이용한 동적 데이터 렌더링(SPA 방식) 구현",
+            img: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80"
+        },
+        project3: {
+            title: "시선 추적 데이터 시각화",
+            tech: "사용 기술: Python, Pandas, Matplotlib, Seaborn",
+            desc: "HMD 실험 과정에서 추출된 대용량 CSV 형태의 안구 움직임(Eye-tracking) 로그 데이터를 정제하고, 사용자가 화면의 어느 부분을 집중적으로 보았는지 Heatmap 형태로 시각화했습니다.",
+            role: "- 결측치 제거 및 데이터 정규화 스크립트 작성<br>- Heatmap 및 Scatter plot 그래프 도출 자동화",
+            img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+        },
+        project4: {
+            title: "아두이노 스마트 홈 IoT",
+            tech: "사용 기술: Arduino, C, 온습도 센서, 블루투스 모듈",
+            desc: "실내 온습도를 측정하고 스마트폰 앱을 통해 실시간으로 모니터링하며, 조건에 따라 LED 및 소형 팬을 제어할 수 있는 미니 스마트 홈 시스템입니다.",
+            role: "- 센서 회로 설계 및 브레드보드 구성<br>- 블루투스 통신(Serial)을 통한 제어 코드 구현",
+            img: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80"
+        }
+    };
+
+    // 카드를 클릭했을 때 실행되는 함수
+    function changeProject(projectId, cardElement) {
+        // 1. 모든 카드에서 active 클래스 제거
+        const allCards = document.querySelectorAll('.project-card');
+        allCards.forEach(card => card.classList.remove('active'));
+        
+        // 2. 클릭한 카드에만 active 클래스 추가 (선택된 효과)
+        cardElement.classList.add('active');
+
+        // 3. 하단 상세 영역 데이터 교체
+        const data = projectData[projectId];
+        
+        // 약간의 투명도 효과를 주어 부드럽게 전환되는 느낌 연출
+        const detailView = document.getElementById('detail-view');
+        detailView.style.opacity = '0';
+        
+        setTimeout(() => {
+            document.getElementById('detail-title').innerText = data.title;
+            document.getElementById('detail-tech').innerHTML = '<i class="fa-solid fa-code"></i> ' + data.tech;
+            document.getElementById('detail-desc').innerText = data.desc;
+            document.getElementById('detail-role-text').innerHTML = data.role;
+            document.getElementById('detail-img').src = data.img;
+            
+            detailView.style.opacity = '1';
+        }, 150); // 0.15초 뒤에 데이터 변경하고 나타남
+    }
+</script>
+
+</body>
+</html>
